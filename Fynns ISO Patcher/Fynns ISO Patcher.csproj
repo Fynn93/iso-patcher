@@ -6,7 +6,7 @@
     <Nullable>warnings</Nullable>
     <DebugType>embedded</DebugType>
     <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>cert\sgKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\cert\sgKey.snk</AssemblyOriginatorKeyFile>
     <PublishSingleFile>true</PublishSingleFile>
   </PropertyGroup>
   <ItemGroup>
