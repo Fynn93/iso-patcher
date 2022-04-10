@@ -30,15 +30,11 @@ jobs:
     - name: Upload Debug
       uses: actions/upload-artifact@v3.0.0
       with:
-        # Artifact name
         name: Debug
-        # A file, directory or wildcard pattern that describes what to upload
         path: "Fynns ISO Patcher\\bin\\Debug\\net6.0\\FIP_Debug.zip"
         
     - name: Upload Publish
       uses: actions/upload-artifact@v3.0.0
       with:
-        # Artifact name
         name: Publish
-        # A file, directory or wildcard pattern that describes what to upload
         path: "Fynns ISO Patcher\\bin\\Release\\net6.0\\publish\\win-x64\\FIP_Publish.zip"
