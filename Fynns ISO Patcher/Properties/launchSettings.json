@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Fynns ISO Patcher": {
+      "commandName": "Project",
+      "commandLineArgs": "-i RMCP01.wbfs -f wbfs -o newmkwii -d",
+      "workingDirectory": "D:\\Fynns ISO Patcher\\Fynns ISO Patcher\\bin\\Debug\\net6.0"
+    }
+  }
+}

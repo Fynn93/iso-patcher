@@ -1,0 +1,14 @@
+<Variables>
+	<ProjectName>
+		<Value>Fynns ISO Patcher</Value>
+	</ProjectName>
+	<LETool>
+		<Value>false</Value>
+	</LETool>
+	<DataFile>
+		<Value>patch.pkg</Value>
+	</DataFile>
+	<MKDI>
+		<Value>false</Value>
+	</MKDI>
+</Variables>
