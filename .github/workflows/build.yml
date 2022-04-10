@@ -1,4 +1,4 @@
-name: .NET
+name: FIP
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
     - name: Zip Debug
       run: Compress-Archive "Fynns ISO Patcher\bin\Debug\net6.0" "Fynns ISO Patcher\bin\Debug\net6.0\FIP_Debug.zip"
     - name: Zip Publish
-      run: Compress-Archive "Fynns ISO Patcher\bin\Release\net6.0\publish\win-x64" "Fynns ISO Patcher\bin\Release\net6.0\publish\win-x64\FIP_Publish.zip"
+      run: Compress-Archive "Fynns ISO Patcher\bin\Release\net6.0\win-x64\publish" "Fynns ISO Patcher\bin\Release\net6.0\win-x64\publish\FIP_Publish.zip"
     - name: Upload Debug
       uses: actions/upload-artifact@v3.0.0
       with:
@@ -37,4 +37,4 @@ jobs:
       uses: actions/upload-artifact@v3.0.0
       with:
         name: Publish
-        path: "Fynns ISO Patcher\\bin\\Release\\net6.0\\publish\\win-x64\\FIP_Publish.zip"
+        path: "Fynns ISO Patcher\\bin\\Release\\net6.0\\win-x64\\publish\\FIP_Publish.zip"
