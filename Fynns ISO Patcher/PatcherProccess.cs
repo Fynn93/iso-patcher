@@ -345,7 +345,6 @@ namespace Fynns_ISO_Patcher
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Done Creating the Riivolution Image.\nCreated one (1) Riivolution image!\n");
                 Console.ForegroundColor = origColor;
-                Console.Write("Press any key to exit.");
                 Commands.System("pause", "");
             }
         }
