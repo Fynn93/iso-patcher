@@ -24,9 +24,9 @@ jobs:
     - name: Publish
       run: dotnet publish -p:PublishSingleFile=true -r win-x64 -c Release --self-contained false
     - name: Zip Debug
-      run: tar.exe -a -c -f "Fynns ISO Patcher\bin\Debug\net6.0\FIP_Debug.zip" "Fynns ISO Patcher\bin\Debug\net6.0\*" 
+      run: powershell "Compress-Archive Fynns ISO Patcher\bin\Debug\net6.0\* ""Fynns ISO Patcher\bin\Debug\net6.0\FIP_Debug.zip"
     - name: Zip Publish
-      run: tar.exe -a -c -f "Fynns ISO Patcher\bin\Release\net6.0\win-x64\publish\FIP_Publish.zip" "Fynns ISO Patcher\bin\Debug\net6.0\*" 
+      run: powershell "Compress-Archive Fynns ISO Patcher\bin\Release\net6.0\publish\win-x64\* ""Fynns ISO Patcher\bin\Release\net6.0\publish\win-x64\FIP_Publish.zip"
     - name: Upload Debug
       uses: actions/upload-artifact@v3.0.0
       with:
@@ -35,10 +35,10 @@ jobs:
         # A file, directory or wildcard pattern that describes what to upload
         path: "Fynns ISO Patcher\\bin\\Debug\\net6.0\\FIP_Debug.zip"
         
-    - name: Upload Debug
+    - name: Upload Publish
       uses: actions/upload-artifact@v3.0.0
       with:
         # Artifact name
         name: Publish
         # A file, directory or wildcard pattern that describes what to upload
-        path: "Fynns ISO Patcher\\bin\\Debug\\net6.0\\FIP_Publish.zip"
+        path: "Fynns ISO Patcher\\bin\\Release\\net6.0\\FIP_Publish.zip"
