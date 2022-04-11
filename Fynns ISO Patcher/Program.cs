@@ -58,11 +58,11 @@ namespace Fynns_ISO_Patcher
             ZipParser.DecompressFile(df, "patch");
             if(Riivolution == true)
             {
-                PatcherProccess.Start(WSZST, true);
+                PatcherProccess.Start(WSZST, true, pn);
             }
             else
             {
-                PatcherProccess.Start(WSZST, false);
+                PatcherProccess.Start(WSZST, false, pn);
                 PatcherProccess.CreateFile(options.Output, options.Format, WIT, pn);
             }
             PatcherProccess.CleanUp();
