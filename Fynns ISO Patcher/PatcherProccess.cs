@@ -14,7 +14,7 @@ namespace Fynns_ISO_Patcher
             Console.WriteLine();
             Commands.System(wit, @$"extract ""{input}"" workdir.tmp -o -vvv --psel DATA");
         }
-        public static void Start(string wszst, bool riiv)
+        public static void Start(string wszst, bool riiv, string pkgname)
         {
             Console.WriteLine("\n* Patch Menu Files [LE-CODE]");
             File.Copy(@".\workdir.tmp\files\Scene\UI\Channel.szs", @".\patch\lecode\ui\Channel.szs", true);
@@ -292,7 +292,7 @@ namespace Fynns_ISO_Patcher
                     Directory.Delete("riiv-sd", true);
                 }
                 Directory.CreateDirectory("riiv-sd");
-                string pkgname = File.ReadAllText(".\\patch\\riiv\\pkgname.txt");
+                if(pkgname == null) pkgname = File.ReadAllText(".\\patch\\riiv\\pkgname.txt");
                 Directory.Move(".\\patch\\riiv\\template\\riiv-sd-stp\\%PKGNAME%", $".\\patch\\riiv\\template\\riiv-sd-stp\\{pkgname}");
                 Tools.DirectoryCopy(".\\patch\\riiv\\template\\riiv-sd-stp", ".\\riiv-sd");
                 Console.WriteLine("* Patching Files");
@@ -345,6 +345,7 @@ namespace Fynns_ISO_Patcher
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Done Creating the Riivolution Image.\nCreated one (1) Riivolution image!\n");
                 Console.ForegroundColor = origColor;
+                Console.Write("Press any key to exit.");
                 Commands.System("pause", "");
             }
         }

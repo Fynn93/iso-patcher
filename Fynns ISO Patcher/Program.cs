@@ -46,12 +46,14 @@ namespace Fynns_ISO_Patcher
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("============================================================================================================================\n");
             ResetConsole();
-            Console.WriteLine("Checking for Updates...");
-            await Updater.Update();
             string df = Variables.DataFile();
             string pn = Variables.ProjectName();
+            string uu = Variables.UpdateURL();
+            string v  = Variables.Version();
             bool mkdi = Variables.MKDI();
             if (mkdi) Console.WriteLine("MKDI Support enabled (BETA!)");
+            Console.WriteLine("Checking for Updates...");
+            await Updater.Update(uu, v);
             PatcherProccess.ExtractFile(options.Input, WIT);
             ZipParser.DecompressFile(df, "patch");
             if(Riivolution == true)

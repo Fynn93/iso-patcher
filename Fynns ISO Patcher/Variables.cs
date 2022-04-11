@@ -28,6 +28,24 @@ namespace Fynns_ISO_Patcher
             return df;
         }
 
+        public static string UpdateURL()
+        {
+            XmlDocument xml = new();
+            xml.Load("settings.xml");
+            XmlNodeList xNodeList = xml.SelectNodes("/Variables/UpdateURL");
+            string uu = xNodeList![0]!["Value"]!.InnerText;
+            return uu;
+        }
+
+        public static string Version()
+        {
+            XmlDocument xml = new();
+            xml.Load("settings.xml");
+            XmlNodeList xNodeList = xml.SelectNodes("/Variables/Version");
+            string v = xNodeList![0]!["Value"]!.InnerText;
+            return v;
+        }
+
         public static bool MKDI()
         {
             XmlDocument xml = new();

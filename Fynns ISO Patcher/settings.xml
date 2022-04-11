@@ -1,6 +1,6 @@
 <Variables>
 	<ProjectName>
-		<Value>Fynns ISO Patcher</Value>
+		<Value>naas2</Value>
 	</ProjectName>
 	<LETool>
 		<Value>false</Value>
@@ -11,4 +11,10 @@
 	<MKDI>
 		<Value>false</Value>
 	</MKDI>
+	<UpdateURL>
+		<Value>https://api.fynn93.tech/naas/update.xml</Value>
+	</UpdateURL>
+	<Version>
+		<Value>2.1.0.0</Value>
+	</Version>
 </Variables>

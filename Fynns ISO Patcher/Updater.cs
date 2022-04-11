@@ -63,15 +63,15 @@ namespace Fynns_ISO_Patcher
             return s;
         }
 
-        public static async Task Update()
+        public static async Task Update(string UpdateURL, string oversion)
         {
             HttpClient client = new();
-            var task = Task.Run(() => client.GetStringAsync("https://api.fynn93.tech/naas/update.xml"));
+            var task = Task.Run(() => client.GetStringAsync(UpdateURL));
             task.Wait();
             string xml = task.Result.ToString();
             string version = GetVersion(xml);
             string url = GetURL(xml);
-            string oversion = File.ReadAllText(".\\bin\\version.txt");
+            if(oversion == null) oversion = File.ReadAllText(".\\bin\\version.txt");
             int oversioni = Convert.ToInt32(oversion.Replace(".", ""));
             int versioni = Convert.ToInt32(version.Replace(".", ""));
             if(oversioni < versioni)
