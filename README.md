@@ -8,6 +8,6 @@ Features:
 - Easy to modify
 - Patching a Distribution with 125 Tracks, takes under 15 Minutes!
 
-Designed to be used with New Adventure All Stars
+Designed to be used with New Adventure All Stars v2.1
 
 Written by [Fynn93](https://fynn93.tech)
