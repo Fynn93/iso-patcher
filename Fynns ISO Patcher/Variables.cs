@@ -46,6 +46,15 @@ namespace Fynns_ISO_Patcher
             return v;
         }
 
+        public static string ID()
+        {
+            XmlDocument xml = new();
+            xml.Load("settings.xml");
+            XmlNodeList xNodeList = xml.SelectNodes("/Variables/ID");
+            string id = xNodeList![0]!["Value"]!.InnerText;
+            return id;
+        }
+
         public static bool MKDI()
         {
             XmlDocument xml = new();

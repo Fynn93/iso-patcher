@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Fynns_ISO_Patcher
 {
-    public class PatcherProccess
+    public class PatcherProcess
     {
         public static void ExtractFile(string input, string wit)
         {
@@ -16,7 +16,7 @@ namespace Fynns_ISO_Patcher
         }
         public static void Start(string wszst, bool riiv, string pkgname)
         {
-            Console.WriteLine("\n* Patch Menu Files [LE-CODE]");
+            Console.WriteLine("* Patch Menu Files [LE-CODE]");
             File.Copy(@".\workdir.tmp\files\Scene\UI\Channel.szs", @".\patch\lecode\ui\Channel.szs", true);
             File.Copy(@".\workdir.tmp\files\Scene\UI\Globe.szs", @".\patch\lecode\ui\Globe.szs", true);
             File.Copy(@".\workdir.tmp\files\Scene\UI\MenuMulti.szs", @".\patch\lecode\ui\MenuMulti.szs", true);
@@ -42,9 +42,9 @@ namespace Fynns_ISO_Patcher
             File.Copy(@".\workdir.tmp\files\rel\StaticR.rel", @".\patch\sys\StaticR.rel", true);
             Console.WriteLine("* Create Patch Files");
             Commands.System(wszst, "autoadd ./workdir.tmp/files/Race/Course -D ./bin/tools/auto-add -q -o");
+            
             Console.WriteLine("* Convert WBZ Files");
             Stopwatch sw = Stopwatch.StartNew();
-            sw.Start();
             TimeSpan ts = sw.Elapsed;
             string[] wbzfiles = Directory.GetFiles(".\\patch\\wbz-files", "*.wbz");
             int count = 0;
@@ -62,10 +62,7 @@ namespace Fynns_ISO_Patcher
                 count++;
             }
             sw.Stop();
-            Console.WriteLine("* Patch BMG Messages         ");
-            Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_?.szs --patch-bmg \"overwrite=./patch/bmg/Common.bmg\" -q");
-            Console.WriteLine("* Patch Strap Images");
-            string REG = null;
+            string REG = "";
             if (File.Exists(@".\workdir.tmp\files\Scene\UI\MenuSingle_E.szs"))
             {
                 REG = "PAL";
@@ -82,6 +79,47 @@ namespace Fynns_ISO_Patcher
             {
                 REG = "JAP";
             }
+            Console.WriteLine("* Patch BMG Messages         ");
+            Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_?.szs --patch-bmg \"overwrite=./patch/bmg/Common.txt\" -q");
+            if (REG == "PAL")
+            {
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_E.szs --patch-bmg \"overwrite=./patch/bmg/Wiimmfi_E.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_E.szs --patch-bmg \"overwrite=./patch/bmg/Number_E.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_E.szs --patch-bmg \"overwrite=./patch/bmg/Menu_E.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_E.szs --patch-bmg \"overwrite=./patch/bmg/Race_E.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_F.szs --patch-bmg \"overwrite=./patch/bmg/Wiimmfi_F.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_F.szs --patch-bmg \"overwrite=./patch/bmg/Number_F.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_F.szs --patch-bmg \"overwrite=./patch/bmg/Menu_F.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_F.szs --patch-bmg \"overwrite=./patch/bmg/Race_F.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_G.szs --patch-bmg \"overwrite=./patch/bmg/Wiimmfi_G.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_G.szs --patch-bmg \"overwrite=./patch/bmg/Number_G.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_G.szs --patch-bmg \"overwrite=./patch/bmg/Menu_G.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_G.szs --patch-bmg \"overwrite=./patch/bmg/Race_G.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_I.szs --patch-bmg \"overwrite=./patch/bmg/Wiimmfi_I.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_I.szs --patch-bmg \"overwrite=./patch/bmg/Number_I.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_I.szs --patch-bmg \"overwrite=./patch/bmg/Menu_I.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_I.szs --patch-bmg \"overwrite=./patch/bmg/Race_I.txt\" -q");
+            }
+            else if (REG == "USA")
+            {
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_M.szs --patch-bmg \"overwrite=./patch/bmg/Wiimmfi_M.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_M.szs --patch-bmg \"overwrite=./patch/bmg/Number_M.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_M.szs --patch-bmg \"overwrite=./patch/bmg/Menu_M.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_M.szs --patch-bmg \"overwrite=./patch/bmg/Race_M.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_Q.szs --patch-bmg \"overwrite=./patch/bmg/Wiimmfi_Q.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_Q.szs --patch-bmg \"overwrite=./patch/bmg/Number_Q.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_Q.szs --patch-bmg \"overwrite=./patch/bmg/Menu_Q.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_Q.szs --patch-bmg \"overwrite=./patch/bmg/Race_Q.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_S.szs --patch-bmg \"overwrite=./patch/bmg/Wiimmfi_S.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_S.szs --patch-bmg \"overwrite=./patch/bmg/Number_S.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_S.szs --patch-bmg \"overwrite=./patch/bmg/Menu_S.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_S.szs --patch-bmg \"overwrite=./patch/bmg/Race_S.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_U.szs --patch-bmg \"overwrite=./patch/bmg/Wiimmfi_U.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_U.szs --patch-bmg \"overwrite=./patch/bmg/Number_U.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_U.szs --patch-bmg \"overwrite=./patch/bmg/Menu_U.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_U.szs --patch-bmg \"overwrite=./patch/bmg/Race_U.txt\" -q");
+            }
+            Console.WriteLine("* Patch Strap Images");
             if(REG == "PAL")
             {
                 Commands.System(wszst, "xall ./workdir.tmp/files/Boot/Strap/eu/*.szs --no-mm -o -q");
@@ -345,12 +383,12 @@ namespace Fynns_ISO_Patcher
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Done Creating the Riivolution Image.\nCreated one (1) Riivolution image!\n");
                 Console.ForegroundColor = origColor;
-                Console.Write("Press any key to exit.");
+                Console.WriteLine("Press any key to exit.");
                 Commands.System("pause", "");
             }
         }
 
-        public static void CreateFile(string output, string format, string wit, string pn)
+        public static void CreateFile(string output, string format, string wit, string pn, string id)
         {
             if (String.IsNullOrEmpty(output))
             {
@@ -360,7 +398,7 @@ namespace Fynns_ISO_Patcher
             {
                 format = "wbfs";
             }
-            Commands.System(wit, $"cp \"workdir.tmp\" \"{output}.{format}\" -o -vvv --id NAAS02");
+            Commands.System(wit, $"cp \"workdir.tmp\" \"{output}.{format}\" -o -vvv --id {id}");
         }
 
         public static void CleanUp()

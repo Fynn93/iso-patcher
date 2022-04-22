@@ -13,6 +13,7 @@ namespace Fynns_ISO_Patcher
         public static void DecompressFile(string inFile, string outFile)
         {
             if (Directory.Exists("patch")) { Directory.Delete("patch", true); }
+            Console.WriteLine("\n* Extract Patch File");
             ZipFile.ExtractToDirectory(inFile, outFile, true);
         }
     }

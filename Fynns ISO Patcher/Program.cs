@@ -22,6 +22,9 @@ namespace Fynns_ISO_Patcher
             string[] witfiles = Directory.GetFiles(CUR_DIR, "wit", SearchOption.AllDirectories);
             string WIT = ".\\bin\\tools\\wit.exe";
             string WSZST = ".\\bin\\tools\\wszst.exe";
+            // unset wit & wszst variables
+            Environment.SetEnvironmentVariable("WIT_OPT", "");
+            Environment.SetEnvironmentVariable("WSZST_OPT", "");
             ConsoleColor origColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(@$"
@@ -50,22 +53,23 @@ namespace Fynns_ISO_Patcher
             string pn = Variables.ProjectName();
             string uu = Variables.UpdateURL();
             string v  = Variables.Version();
+            string id = Variables.ID();
             bool mkdi = Variables.MKDI();
             if (mkdi) Console.WriteLine("MKDI Support enabled (BETA!)");
             Console.WriteLine("Checking for Updates...");
             await Updater.Update(uu, v);
-            PatcherProccess.ExtractFile(options.Input, WIT);
+            PatcherProcess.ExtractFile(options.Input, WIT);
             ZipParser.DecompressFile(df, "patch");
             if(Riivolution == true)
             {
-                PatcherProccess.Start(WSZST, true, pn);
+                PatcherProcess.Start(WSZST, true, pn);
             }
             else
             {
-                PatcherProccess.Start(WSZST, false, pn);
-                PatcherProccess.CreateFile(options.Output, options.Format, WIT, pn);
+                PatcherProcess.Start(WSZST, false, pn);
+                PatcherProcess.CreateFile(options.Output, options.Format, WIT, pn, id);
             }
-            PatcherProccess.CleanUp();
+            PatcherProcess.CleanUp();
             Environment.Exit(0);
         }
     }

@@ -17,4 +17,7 @@
 	<Version>
 		<Value>2.1.0.0</Value>
 	</Version>
+	<ID>
+		<Value>RMC.N2</Value>
+	</ID>
 </Variables>
