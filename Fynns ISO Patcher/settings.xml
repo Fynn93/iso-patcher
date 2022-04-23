@@ -15,9 +15,12 @@
 		<Value>https://api.fynn93.tech/naas/update.xml</Value>
 	</UpdateURL>
 	<Version>
-		<Value>2.1.0.0</Value>
+		<Value>2.0.0.0</Value>
 	</Version>
 	<ID>
 		<Value>RMC.N2</Value>
 	</ID>
+	<Region>
+		<Value>1234</Value>
+	</Region>
 </Variables>

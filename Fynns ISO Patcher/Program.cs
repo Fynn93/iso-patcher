@@ -54,6 +54,7 @@ namespace Fynns_ISO_Patcher
             string uu = Variables.UpdateURL();
             string v  = Variables.Version();
             string id = Variables.ID();
+			string rg = Variables.Region();
             bool mkdi = Variables.MKDI();
             if (mkdi) Console.WriteLine("MKDI Support enabled (BETA!)");
             Console.WriteLine("Checking for Updates...");
@@ -62,11 +63,11 @@ namespace Fynns_ISO_Patcher
             ZipParser.DecompressFile(df, "patch");
             if(Riivolution == true)
             {
-                PatcherProcess.Start(WSZST, true, pn);
+                PatcherProcess.Start(WSZST, true, pn, rg);
             }
             else
             {
-                PatcherProcess.Start(WSZST, false, pn);
+                PatcherProcess.Start(WSZST, false, pn, rg);
                 PatcherProcess.CreateFile(options.Output, options.Format, WIT, pn, id);
             }
             PatcherProcess.CleanUp();

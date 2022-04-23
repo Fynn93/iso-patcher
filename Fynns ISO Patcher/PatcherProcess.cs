@@ -14,7 +14,7 @@ namespace Fynns_ISO_Patcher
             Console.WriteLine();
             Commands.System(wit, @$"extract ""{input}"" workdir.tmp -o -vvv --psel DATA");
         }
-        public static void Start(string wszst, bool riiv, string pkgname)
+        public static void Start(string wszst, bool riiv, string pkgname, string region)
         {
             Console.WriteLine("* Patch Menu Files [LE-CODE]");
             File.Copy(@".\workdir.tmp\files\Scene\UI\Channel.szs", @".\patch\lecode\ui\Channel.szs", true);
@@ -320,7 +320,7 @@ namespace Fynns_ISO_Patcher
             Console.WriteLine("* Remove unneeded files");
             Tools.DeleteFiles(@".\workdir.tmp\files\Race\Course\", "old_mario_gc_*.szs");
             Console.WriteLine("* Patch main.dol and StaticR.rel");
-            Commands.System(wszst, "wstrt patch ./patch/sys/main.dol ./patch/sys/StaticR.rel --clean-dol --add-lecode --wiimmfi --region 20222 --all-ranks --add-section ./patch/pack-@.gct -q");
+            Commands.System(wszst, $"wstrt patch ./patch/sys/main.dol ./patch/sys/StaticR.rel --clean-dol --add-lecode --wiimmfi --region {region} --all-ranks --add-section ./patch/pack-@.gct -q");
             File.Copy(@".\patch\sys\main.dol", @".\workdir.tmp\sys\main.dol", true);
             File.Copy(@".\patch\sys\StaticR.rel", @".\workdir.tmp\files\rel\StaticR.rel", true);
             Console.WriteLine("* Patch LE-CODE [LE-CODE]");
