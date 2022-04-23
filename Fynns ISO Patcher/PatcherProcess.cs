@@ -42,22 +42,33 @@ namespace Fynns_ISO_Patcher
             File.Copy(@".\workdir.tmp\files\rel\StaticR.rel", @".\patch\sys\StaticR.rel", true);
             Console.WriteLine("* Create Patch Files");
             Commands.System(wszst, "autoadd ./workdir.tmp/files/Race/Course -D ./bin/tools/auto-add -q -o");
-            
             Console.WriteLine("* Convert WBZ Files");
             Stopwatch sw = Stopwatch.StartNew();
+            Stopwatch eta = Stopwatch.StartNew();
             TimeSpan ts = sw.Elapsed;
+            TimeSpan etatime = eta.Elapsed;
+            TimeSpan etat;
             string[] wbzfiles = Directory.GetFiles(".\\patch\\wbz-files", "*.wbz");
-            int count = 0;
+            int count = 1;
             int filecount = wbzfiles.Length;
+            int etai = 0;
             foreach (string wbzfile in wbzfiles)
             {
                 ts = sw.Elapsed;
+                etatime = eta.Elapsed;
                 string seconds = ts.Seconds.ToString();
+                string etas = etatime.Seconds.ToString();
                 if (ts.Seconds < 10)
                 {
                     seconds = "0" + seconds;
                 }
-                Console.Write($"Progress: {count}/{filecount} ({ts.Minutes}m:{seconds}s)\r");
+                if (etatime.Seconds < 10)
+                {
+                    etas = "0" + etas;
+                }
+                etai = (int)etatime.TotalSeconds / count * (filecount - count);
+                etat = TimeSpan.FromSeconds(etai);
+                Console.Write($"Progress: {count}/{filecount} ({ts.Minutes}m:{seconds}s) | eta: ({etat.Minutes}m:{etas}s)   \r");
                 Commands.System(wszst, $"compress --szs \"{wbzfile}\" -E$ --dest ./workdir.tmp/files/Race/Course/$N.szs -q -o");
                 count++;
             }
@@ -79,7 +90,7 @@ namespace Fynns_ISO_Patcher
             {
                 REG = "JAP";
             }
-            Console.WriteLine("* Patch BMG Messages         ");
+            Console.WriteLine("* Patch BMG Messages                               ");
             Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_?.szs --patch-bmg \"overwrite=./patch/bmg/Common.txt\" -q");
             if (REG == "PAL")
             {
@@ -99,6 +110,10 @@ namespace Fynns_ISO_Patcher
                 Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_I.szs --patch-bmg \"overwrite=./patch/bmg/Number_I.txt\" -q");
                 Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_I.szs --patch-bmg \"overwrite=./patch/bmg/Menu_I.txt\" -q");
                 Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_I.szs --patch-bmg \"overwrite=./patch/bmg/Race_I.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_S.szs --patch-bmg \"overwrite=./patch/bmg/Wiimmfi_S.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_S.szs --patch-bmg \"overwrite=./patch/bmg/Number_S.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_S.szs --patch-bmg \"overwrite=./patch/bmg/Menu_S.txt\" -q");
+                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_S.szs --patch-bmg \"overwrite=./patch/bmg/Race_S.txt\" -q");
             }
             else if (REG == "USA")
             {
@@ -110,10 +125,6 @@ namespace Fynns_ISO_Patcher
                 Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_Q.szs --patch-bmg \"overwrite=./patch/bmg/Number_Q.txt\" -q");
                 Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_Q.szs --patch-bmg \"overwrite=./patch/bmg/Menu_Q.txt\" -q");
                 Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_Q.szs --patch-bmg \"overwrite=./patch/bmg/Race_Q.txt\" -q");
-                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_S.szs --patch-bmg \"overwrite=./patch/bmg/Wiimmfi_S.txt\" -q");
-                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_S.szs --patch-bmg \"overwrite=./patch/bmg/Number_S.txt\" -q");
-                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_S.szs --patch-bmg \"overwrite=./patch/bmg/Menu_S.txt\" -q");
-                Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_S.szs --patch-bmg \"overwrite=./patch/bmg/Race_S.txt\" -q");
                 Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_U.szs --patch-bmg \"overwrite=./patch/bmg/Wiimmfi_U.txt\" -q");
                 Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_U.szs --patch-bmg \"overwrite=./patch/bmg/Number_U.txt\" -q");
                 Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_U.szs --patch-bmg \"overwrite=./patch/bmg/Menu_U.txt\" -q");
