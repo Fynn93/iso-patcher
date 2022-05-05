@@ -21,20 +21,40 @@ jobs:
       run: dotnet restore
     - name: Build Debug
       run: dotnet build
-    - name: Publish
+    - name: Build Release
       run: dotnet publish -p:PublishSingleFile=true -r win-x64 -c Release --self-contained false
+    - name: Build Wrapper Debug
+      run: dotnet build wrapper
+    - name: Build Wrapper Release
+      run: dotnet publish wrapper -p:PublishSingleFile=true -r win-x64 -c Release --self-contained false
     - name: Zip Debug
       run: Compress-Archive "Fynns ISO Patcher\bin\Debug\net6.0" "Fynns ISO Patcher\bin\Debug\net6.0\FIP_Debug.zip"
-    - name: Zip Publish
-      run: Compress-Archive "Fynns ISO Patcher\bin\Release\net6.0\win-x64\publish" "Fynns ISO Patcher\bin\Release\net6.0\win-x64\publish\FIP_Publish.zip"
+    - name: Zip Release
+      run: Compress-Archive "Fynns ISO Patcher\bin\Release\net6.0\win-x64\publish" "Fynns ISO Patcher\bin\Release\net6.0\win-x64\publish\FIP_Release.zip"
+    - name: Zip Wrapper Debug
+      run: Compress-Archive "Wrapper\bin\Debug\net6.0" "Wrapper\bin\Debug\net6.0\Wrapper_Debug.zip"
+    - name: Zip Wrapper Release
+      run: Compress-Archive "Wrapper\bin\Release\net6.0\win-x64\publish" "Wrapper\bin\Release\net6.0\win-x64\publish\Wrapper_Release.zip"
     - name: Upload Debug
       uses: actions/upload-artifact@v3.0.0
       with:
         name: Debug
         path: "Fynns ISO Patcher\\bin\\Debug\\net6.0\\FIP_Debug.zip"
         
-    - name: Upload Publish
+    - name: Upload Release
       uses: actions/upload-artifact@v3.0.0
       with:
-        name: Publish
-        path: "Fynns ISO Patcher\\bin\\Release\\net6.0\\win-x64\\publish\\FIP_Publish.zip"
+        name: Release
+        path: "Fynns ISO Patcher\\bin\\Release\\net6.0\\win-x64\\publish\\FIP_Release.zip"
+        
+    - name: Upload Wrapper Debug
+      uses: actions/upload-artifact@v3.0.0
+      with:
+        name: Wrapper Debug
+        path: "Wrapper\\bin\\Debug\\net6.0\\Wrapper_Debug.zip"
+        
+    - name: Upload Wrapper Release
+      uses: actions/upload-artifact@v3.0.0
+      with:
+        name: Wrapper Release
+        path: "Wrapper\\bin\\Release\\net6.0\\win-x64\\publish\\Wrapper_Release.zip"
