@@ -41,37 +41,69 @@ namespace Fynns_ISO_Patcher
     public class Updater
     {
         private static ProgressBar ConsoleProgress { get; set; }
-        private static ProgressBarOptions ChildOption { get; set; }
         private static ProgressBarOptions ProcessBarOption { get; set; }
         private static ConcurrentDictionary<string, ChildProgressBar> ChildConsoleProgresses { get; set; }
 
+        // deprecated
         public static string GetVersion(string xml)
         {
             XmlDocument xmlDoc = new();
             xmlDoc.LoadXml(xml);
-            XmlNodeList xNodeList = xmlDoc.SelectNodes("/item");
+            XmlNodeList xNodeList = xmlDoc.SelectNodes("/update");
             string s = xNodeList![0]!["version"]!.InnerText;
             return s;
         }
 
-        public static string GetURL(string xml)
+        public static string GetNewestVersion(string xml)
+        {
+            return GetAttribute(xml, "/update", "newest_version");
+        }
+
+        public static string GetURL(string xml, string version)
         {
             XmlDocument xmlDoc = new();
             xmlDoc.LoadXml(xml);
-            XmlNodeList xNodeList = xmlDoc.SelectNodes("/item");
-            string s = xNodeList![0]!["url"]!.InnerText;
+            if(string.IsNullOrEmpty(version))
+            {
+                XmlNodeList xNodeList2 = xmlDoc.GetElementsByTagName("file");
+                foreach (XmlNode node in xNodeList2)
+                {
+                    if (node.Attributes!["newest"]!.Value == "true")
+                    {
+                        return node.Attributes["version"]!.Value + ".zip";
+                    }
+                }
+                return null;
+            }
+            XmlNodeList xNodeList = xmlDoc.GetElementsByTagName("file");
+            foreach(XmlNode node in xNodeList)
+            {
+                if(node.Attributes!["version"]!.Value == version)
+                {
+                    return node.InnerText + ".zip";
+                }
+            }
+            return null;
+        }
+
+        public static string GetAttribute(string xml, string node, string attributename)
+        {
+            XmlDocument xmlDoc = new();
+            xmlDoc.LoadXml(xml);
+            XmlNodeList xNodeList = xmlDoc.SelectNodes(node);
+            string s = xNodeList![0]!.Attributes![attributename]!.Value;
             return s;
         }
 
         public static async Task Update(string UpdateURL, string oversion)
         {
             HttpClient client = new();
-            var task = Task.Run(() => client.GetStringAsync(UpdateURL));
-            task.Wait();
-            string xml = task.Result.ToString();
-            string version = GetVersion(xml);
-            string url = GetURL(xml);
-            if(oversion == null) oversion = File.ReadAllText(".\\bin\\version.txt");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd($"FynnsISOPatcher/{Assembly.GetExecutingAssembly().GetName().Version!.ToString(3)}");
+            string xml = await client.GetStringAsync(UpdateURL);
+
+            string version = GetNewestVersion(xml);
+            string url = GetURL(xml, GetNewestVersion(xml));
+            if(string.IsNullOrEmpty(oversion)) oversion = Variables.Version();
             int oversioni = Convert.ToInt32(oversion.Replace(".", ""));
             int versioni = Convert.ToInt32(version.Replace(".", ""));
             if(oversioni < versioni)
@@ -87,12 +119,12 @@ namespace Fynns_ISO_Patcher
                     {
                         Accept = "*/*",
                         AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
-                        CookieContainer =  new CookieContainer(), // Add your cookies
-                        Headers = new WebHeaderCollection(), // Add your custom headers
+                        CookieContainer =  new CookieContainer(),
+                        Headers = new WebHeaderCollection(),
                         KeepAlive = false,
-                        ProtocolVersion = HttpVersion.Version11, // Default value is HTTP 1.1
+                        ProtocolVersion = HttpVersion.Version11,
                         UseDefaultCredentials = false,
-                        UserAgent = $"DownloaderSample/{Assembly.GetExecutingAssembly().GetName().Version!.ToString(3)}"
+                        UserAgent = $"FynnsISOPatcher/{Assembly.GetExecutingAssembly().GetName().Version!.ToString(3)}"
                     }
                 };
                 var downloader = new DownloadService(downloadOpt);
@@ -129,7 +161,7 @@ namespace Fynns_ISO_Patcher
             else
             {
                 Console.WriteLine("Download completed successfully.\n\n");
-                Commands.System(".\\bin\\tools\\post-update.bat", "");
+                Commands.System("start", " \"\" .\\bin\\tools\\post-update.bat");
                 Environment.Exit(0);
             }
         }

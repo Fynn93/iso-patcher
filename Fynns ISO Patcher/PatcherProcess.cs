@@ -2,8 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Net.Http;
 
 namespace Fynns_ISO_Patcher
 {
@@ -16,6 +18,9 @@ namespace Fynns_ISO_Patcher
         }
         public static void Start(string wszst, bool riiv, string pkgname, string region)
         {
+            Console.WriteLine("* Create Cache");
+            Directory.CreateDirectory("fip-cache");
+            Directory.CreateDirectory("fip-cache\\tracks");
             Console.WriteLine("* Patch Menu Files [LE-CODE]");
             File.Copy(@".\workdir.tmp\files\Scene\UI\Channel.szs", @".\patch\lecode\ui\Channel.szs", true);
             File.Copy(@".\workdir.tmp\files\Scene\UI\Globe.szs", @".\patch\lecode\ui\Globe.szs", true);
@@ -48,29 +53,56 @@ namespace Fynns_ISO_Patcher
             TimeSpan ts = sw.Elapsed;
             TimeSpan etatime = eta.Elapsed;
             TimeSpan etat;
+            bool cacheIsValid = false;
             string[] wbzfiles = Directory.GetFiles(".\\patch\\wbz-files", "*.wbz");
+            string[] cachefiles = Directory.GetFiles(".\\fip-cache\\tracks", "*.szs");
+            int ccount = 0;
+            foreach (string wbzfile in wbzfiles)
+            {
+                if (cachefiles[ccount].Replace(".szs", "") == wbzfiles[ccount].Replace(".wbz", ""))
+                {
+                    string wbzfilename = wbzfile.Replace(".wbz", "");
+                    string szsfilename = cachefiles[ccount].Replace(".szs", "");
+                    ccount++;
+                }
+            }
+            if (ccount == wbzfiles.Length)
+            {
+                cacheIsValid = true;
+            }
             int count = 1;
             int filecount = wbzfiles.Length;
             int etai = 0;
-            foreach (string wbzfile in wbzfiles)
+            if(cacheIsValid)
             {
-                ts = sw.Elapsed;
-                etatime = eta.Elapsed;
-                string seconds = ts.Seconds.ToString();
-                string etas = etatime.Seconds.ToString();
-                if (ts.Seconds < 10)
+                Tools.CopyFilesSZS(".\\fip-cache\\tracks", ".\\workdir.tmp\\files\\Race\\Course");
+            }
+            else
+            {
+                foreach (string wbzfile in wbzfiles)
                 {
-                    seconds = "0" + seconds;
+                    ts = sw.Elapsed;
+                    etatime = eta.Elapsed;
+                    string seconds = ts.Seconds.ToString();
+                    string etas = etatime.Seconds.ToString();
+                    if (ts.Seconds < 10)
+                    {
+                        seconds = "0" + seconds;
+                    }
+                    if (etatime.Seconds < 10)
+                    {
+                        etas = "0" + etas;
+                    }
+                    etai = (int)etatime.TotalSeconds / count * (filecount - count);
+                    etat = TimeSpan.FromSeconds(etai);
+                    if (count < 10)
+                        Console.Write($"Progress: {count}/{filecount} ({ts.Minutes}m:{seconds}s)\r");
+                    else if (count >= 11)
+                        Console.Write($"Progress: {count}/{filecount} ({ts.Minutes}m:{seconds}s) | eta: ({etat.Minutes}m:{etas}s)   \r");
+                    Commands.System(wszst, $"compress --szs \"{wbzfile}\" -E$ --dest ./workdir.tmp/files/Race/Course/$N.szs -q -o");
+                    File.Copy(wbzfile, $"fip-cache\\tracks\\{Path.GetFileName(wbzfile)}");
+                    count++;
                 }
-                if (etatime.Seconds < 10)
-                {
-                    etas = "0" + etas;
-                }
-                etai = (int)etatime.TotalSeconds / count * (filecount - count);
-                etat = TimeSpan.FromSeconds(etai);
-                Console.Write($"Progress: {count}/{filecount} ({ts.Minutes}m:{seconds}s) | eta: ({etat.Minutes}m:{etas}s)   \r");
-                Commands.System(wszst, $"compress --szs \"{wbzfile}\" -E$ --dest ./workdir.tmp/files/Race/Course/$N.szs -q -o");
-                count++;
             }
             sw.Stop();
             string REG = "";
@@ -90,7 +122,7 @@ namespace Fynns_ISO_Patcher
             {
                 REG = "JAP";
             }
-            Console.WriteLine("* Patch BMG Messages                               ");
+            Console.WriteLine("* Patch BMG Messages                            ");
             Commands.System(wszst, "patch ./workdir.tmp/files/Scene/UI/*_?.szs --patch-bmg \"overwrite=./patch/bmg/Common.txt\" -q");
             if (REG == "PAL")
             {
@@ -326,13 +358,15 @@ namespace Fynns_ISO_Patcher
             Console.WriteLine("* Patch LE-CODE [LE-CODE]");
             Commands.System(wszst, "wlect patch ./patch/lecode/bin/*.bin --le-define ./patch/lecode/le-define.txt --lpar ./patch/lecode/lecode-param.txt --track-dir ./workdir.tmp/files/Race/Course --move-tracks ./workdir.tmp/files/Race/Course -q");
             Tools.CopyLECODE(@".\patch\lecode\bin", @".\workdir.tmp\files\rel");
+            Console.WriteLine("* Extract Common Files");
+            Commands.System(wszst, "xcommon ./workdir.tmp/files/Race/Course/*.szs -qiod ./workdir.tmp/Race/Common/$N -E$");
 
             if (riiv == true)
             {
                 ConsoleColor origColor = Console.ForegroundColor;
                 Console.BackgroundColor = ConsoleColor.DarkBlue;
                 Console.ForegroundColor = ConsoleColor.Black;
-                Console.WriteLine("\nPreparing Riivolution Generation\n\n");
+                Console.WriteLine("\nPreparing Riivolution Generation\n");
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = origColor;
                 Console.WriteLine("* Copying Files");
@@ -341,13 +375,13 @@ namespace Fynns_ISO_Patcher
                     Directory.Delete("riiv-sd", true);
                 }
                 Directory.CreateDirectory("riiv-sd");
-                if(pkgname == null) pkgname = File.ReadAllText(".\\patch\\riiv\\pkgname.txt");
+                if(string.IsNullOrEmpty(pkgname)) pkgname = File.ReadAllText(".\\patch\\riiv\\pkgname.txt");
                 Directory.Move(".\\patch\\riiv\\template\\riiv-sd-stp\\%PKGNAME%", $".\\patch\\riiv\\template\\riiv-sd-stp\\{pkgname}");
                 Tools.DirectoryCopy(".\\patch\\riiv\\template\\riiv-sd-stp", ".\\riiv-sd");
                 Console.WriteLine("* Patching Files");
-                foreach(string file in Directory.EnumerateFiles(".\\workdir.tmp\\files\\Race\\Course", "*.szs"))
+                foreach(string file in Directory.GetFiles(".\\workdir.tmp\\files\\Race\\Course", "*.szs"))
                 {
-                    Commands.System(".\\bin\\tools\\node.exe", $"./bin/tools/riiv-track-gen.js {file} {pkgname} >> .\\patch\\riiv\\template\\tmp.xml");
+                    File.AppendAllText(".\\patch\\riiv\\template\\tmp.xml", $"  <file disc=\"/Race/Course/{file}\" external=\"/{pkgname}/Race/Course/{file}\" create=\"true\" />");
                 }
                 if (REG == "PAL")
                 {

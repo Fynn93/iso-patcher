@@ -8,12 +8,12 @@ using System.Diagnostics;
 
 namespace Fynns_ISO_Patcher
 {
-    class Commands
+    public class Commands
     {
         /// <summary>
         /// System command from C/C++
         /// </summary>
-        /// <param name="format"></param>
+        /// <param name="format">The command to execute</param>
         /// <returns></returns>
         [DllImport("msvcrt.dll")]
         public static extern int system(string format);
