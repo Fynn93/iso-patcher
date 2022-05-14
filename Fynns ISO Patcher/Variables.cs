@@ -11,9 +11,10 @@ namespace Fynns_ISO_Patcher
     public class Variables
     {
 		public static XmlDocument xml = new();
+        public static string xmlfile = "settings.xml";
         public static string ProjectName()
         {
-            xml.Load("settings.xml");
+            xml.Load(xmlfile);
             XmlNodeList xNodeList = xml.SelectNodes("/Variables/ProjectName");
             string ProjectName = xNodeList![0]!["Value"]!.InnerText;
             return ProjectName;
@@ -21,7 +22,7 @@ namespace Fynns_ISO_Patcher
 		
 		public static string Region()
         {
-            xml.Load("settings.xml");
+            xml.Load(xmlfile);
             XmlNodeList xNodeList = xml.SelectNodes("/Variables/Region");
             string Region = xNodeList![0]!["Value"]!.InnerText;
             return Region;
@@ -29,7 +30,7 @@ namespace Fynns_ISO_Patcher
 
         public static string DataFile()
         {
-            xml.Load("settings.xml");
+            xml.Load(xmlfile);
             XmlNodeList xNodeList = xml.SelectNodes("/Variables/DataFile");
             string df = xNodeList![0]!["Value"]!.InnerText;
             return df;
@@ -37,7 +38,7 @@ namespace Fynns_ISO_Patcher
 
         public static string UpdateURL()
         {
-            xml.Load("settings.xml");
+            xml.Load(xmlfile);
             XmlNodeList xNodeList = xml.SelectNodes("/Variables/UpdateURL");
             string uu = xNodeList![0]!["Value"]!.InnerText;
             return uu;
@@ -45,7 +46,7 @@ namespace Fynns_ISO_Patcher
 
         public static string Version()
         {
-            xml.Load("settings.xml");
+            xml.Load(xmlfile);
             XmlNodeList xNodeList = xml.SelectNodes("/Variables/Version");
             string v = xNodeList![0]!["Value"]!.InnerText;
             return v;
@@ -53,7 +54,7 @@ namespace Fynns_ISO_Patcher
 
         public static string ID()
         {
-            xml.Load("settings.xml");
+            xml.Load(xmlfile);
             XmlNodeList xNodeList = xml.SelectNodes("/Variables/ID");
             string id = xNodeList![0]!["Value"]!.InnerText;
             return id;
@@ -61,7 +62,7 @@ namespace Fynns_ISO_Patcher
 
         public static bool MKDI()
         {
-            xml.Load("settings.xml");
+            xml.Load(xmlfile);
             XmlNodeList xNodeList = xml.SelectNodes("/Variables/MKDI");
             string mkdi = xNodeList![0]!["Value"]!.InnerText;
             if(mkdi == "true")
@@ -73,7 +74,7 @@ namespace Fynns_ISO_Patcher
 
         public static bool LETool()
         {
-            xml.Load("settings.xml");
+            xml.Load(xmlfile);
             XmlNodeList b = xml.SelectNodes("/Variables/LETool");
             string c = b![0]!["Value"]!.InnerText;
             if(c == "true")

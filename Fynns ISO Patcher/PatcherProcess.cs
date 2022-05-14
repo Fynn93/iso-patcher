@@ -53,56 +53,54 @@ namespace Fynns_ISO_Patcher
             TimeSpan ts = sw.Elapsed;
             TimeSpan etatime = eta.Elapsed;
             TimeSpan etat;
-            bool cacheIsValid = false;
             string[] wbzfiles = Directory.GetFiles(".\\patch\\wbz-files", "*.wbz");
-            string[] cachefiles = Directory.GetFiles(".\\fip-cache\\tracks", "*.szs");
-            int ccount = 0;
-            foreach (string wbzfile in wbzfiles)
+            /*if (Directory.Exists(".\\fip-cache\\tracks"))
             {
-                if (cachefiles[ccount].Replace(".szs", "") == wbzfiles[ccount].Replace(".wbz", ""))
+                string[] cachefiles = Directory.GetFiles(".\\fip-cache\\tracks", "*.szs");
+                int ccount = 0;
+                if (cachefiles[0] != "")
                 {
-                    string wbzfilename = wbzfile.Replace(".wbz", "");
-                    string szsfilename = cachefiles[ccount].Replace(".szs", "");
-                    ccount++;
+                    foreach (string wbzfile in wbzfiles)
+                    {
+                        if (cachefiles[ccount].Replace(".szs", "") == wbzfiles[ccount].Replace(".wbz", ""))
+                        {
+                            string wbzfilename = wbzfile.Replace(".wbz", "");
+                            string szsfilename = cachefiles[ccount].Replace(".szs", "");
+                            ccount++;
+                        }
+                    }
+                    if (ccount == wbzfiles.Length)
+                        Tools.CopyFilesSZS(".\\fip-cache\\tracks", ".\\workdir.tmp\\files\\Race\\Course");
                 }
-            }
-            if (ccount == wbzfiles.Length)
-            {
-                cacheIsValid = true;
-            }
+            }*/
+            
             int count = 1;
             int filecount = wbzfiles.Length;
             int etai = 0;
-            if(cacheIsValid)
+            
+            foreach (string wbzfile in wbzfiles)
             {
-                Tools.CopyFilesSZS(".\\fip-cache\\tracks", ".\\workdir.tmp\\files\\Race\\Course");
-            }
-            else
-            {
-                foreach (string wbzfile in wbzfiles)
+                ts = sw.Elapsed;
+                etatime = eta.Elapsed;
+                string seconds = ts.Seconds.ToString();
+                string etas = etatime.Seconds.ToString();
+                if (ts.Seconds < 10)
                 {
-                    ts = sw.Elapsed;
-                    etatime = eta.Elapsed;
-                    string seconds = ts.Seconds.ToString();
-                    string etas = etatime.Seconds.ToString();
-                    if (ts.Seconds < 10)
-                    {
-                        seconds = "0" + seconds;
-                    }
-                    if (etatime.Seconds < 10)
-                    {
-                        etas = "0" + etas;
-                    }
-                    etai = (int)etatime.TotalSeconds / count * (filecount - count);
-                    etat = TimeSpan.FromSeconds(etai);
-                    if (count < 10)
-                        Console.Write($"Progress: {count}/{filecount} ({ts.Minutes}m:{seconds}s)\r");
-                    else if (count >= 11)
-                        Console.Write($"Progress: {count}/{filecount} ({ts.Minutes}m:{seconds}s) | eta: ({etat.Minutes}m:{etas}s)   \r");
-                    Commands.System(wszst, $"compress --szs \"{wbzfile}\" -E$ --dest ./workdir.tmp/files/Race/Course/$N.szs -q -o");
-                    File.Copy(wbzfile, $"fip-cache\\tracks\\{Path.GetFileName(wbzfile)}");
-                    count++;
+                    seconds = "0" + seconds;
                 }
+                if (etatime.Seconds < 10)
+                {
+                    etas = "0" + etas;
+                }
+                etai = (int)etatime.TotalSeconds / count * (filecount - count);
+                etat = TimeSpan.FromSeconds(etai);
+                if (count < 10)
+                    Console.Write($"Progress: {count}/{filecount} ({ts.Minutes}m:{seconds}s)\r");
+                else if (count >= 11)
+                    Console.Write($"Progress: {count}/{filecount} ({ts.Minutes}m:{seconds}s) | eta: ({etat.Minutes}m:{etas}s)   \r");
+                Commands.System(wszst, $"compress --szs \"{wbzfile}\" -E$ -qod ./fip-cache/tracks/$N.szs");
+                File.Copy($".\\fip-cache\\tracks\\{Path.GetFileNameWithoutExtension(wbzfile)}.szs", $".\\workdir.tmp\\files\\Race\\Course\\{Path.GetFileName(wbzfile)}", true);
+                count++;
             }
             sw.Stop();
             string REG = "";
@@ -352,7 +350,7 @@ namespace Fynns_ISO_Patcher
             Console.WriteLine("* Remove unneeded files");
             Tools.DeleteFiles(@".\workdir.tmp\files\Race\Course\", "old_mario_gc_*.szs");
             Console.WriteLine("* Patch main.dol and StaticR.rel");
-            Commands.System(wszst, $"wstrt patch ./patch/sys/main.dol ./patch/sys/StaticR.rel --clean-dol --add-lecode --wiimmfi --region {region} --all-ranks --add-section ./patch/pack-@.gct -q");
+            Commands.System(wszst, $"wstrt patch ./patch/sys/main.dol ./patch/sys/StaticR.rel --clean-dol --add-lecode --region {region} --all-ranks --add-section ./patch/pack-@.gct -q");
             File.Copy(@".\patch\sys\main.dol", @".\workdir.tmp\sys\main.dol", true);
             File.Copy(@".\patch\sys\StaticR.rel", @".\workdir.tmp\files\rel\StaticR.rel", true);
             Console.WriteLine("* Patch LE-CODE [LE-CODE]");
