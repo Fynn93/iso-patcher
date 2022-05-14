@@ -13,6 +13,56 @@ namespace Wrapper
             system($"{filename} {args}");
         }
 
+        public static void EndQuestion()
+        {
+            EndQuestion(false);
+        }
+
+        public static void EndQuestion(bool exit)
+        {
+            if (patchmode == "Generate Riivolution files")
+            {
+                File.WriteAllText("wrapper.cfg", @$"// Fynn's ISO Patcher Wrapper default configuration.
+SELECTEDFILE={selectedfile}
+PATCHMODE={patchmode}
+EXTRAARGS={extraargs}");
+                Console.WriteLine($@"
+Selected File  : {selectedfile}
+Patching Mode  : {patchmode}
+");
+            }
+            else
+            {
+                File.WriteAllText("wrapper.cfg", @$"// Fynn's ISO Patcher Wrapper default configuration.
+SELECTEDFILE={selectedfile}
+PATCHMODE={patchmode}
+OUTPUTFORMAT={outputformat}
+OUTPUTFILE={outputfile}
+EXTRAARGS={extraargs}");
+                Console.WriteLine($@"
+Selected File  : {selectedfile}
+Patching Mode  : {patchmode}
+Output Format  : {outputformat}
+Output Filename: {outputfile}
+");
+            }
+            bool answer = Prompt.Confirm("Is this good?", defaultValue: true);
+            if (answer)
+                System("\"bin\\tools\\Fynns ISO Patcher\"", extraargs);
+                extraargs = "";
+
+            if (exit)
+            {
+                Console.WriteLine("Goodbye!");
+                Environment.Exit(0);
+            }
+        }
+
+        public static string selectedfile = "";
+        public static string patchmode = "";
+        public static string outputfile = "";
+        public static string outputformat = "";
+        public static string extraargs = "";
         static void Main(string[] args)
         {
             ConsoleColor origColor = Console.ForegroundColor;
@@ -29,6 +79,34 @@ namespace Wrapper
  Version: {Assembly.GetExecutingAssembly().GetName().Version}
 ");
             Console.ForegroundColor = origColor;
+
+            if (File.Exists("wrapper.cfg"))
+            {
+                foreach (string line in File.ReadAllLines("wrapper.cfg"))
+                {
+                    if (line.StartsWith("SELECTEDFILE"))
+                    {
+                        selectedfile = line.Split('=')[1];
+                    }
+                    else if (line.StartsWith("PATCHMODE"))
+                    {
+                        patchmode = line.Split('=')[1];
+                    }
+                    else if (line.StartsWith("OUTPUTFORMAT"))
+                    {
+                        outputformat = line.Split('=')[1];
+                    }
+                    else if (line.StartsWith("OUTPUTFILE"))
+                    {
+                        outputfile = line.Split('=')[1];
+                    }
+                    else if (line.StartsWith("EXTRAARGS"))
+                    {
+                        extraargs = line.Split('=')[1];
+                    }
+                }
+                EndQuestion(false);
+            }
 
             int pagesize = 20;
             int count = 0;
@@ -58,16 +136,14 @@ namespace Wrapper
                 count++;
             }
 
-            string extraargs = "";
-
-            string selectedfile = Prompt.Select("Select file to patch", filearray, pagesize);
+            selectedfile = Prompt.Select("Select file to patch", filearray, pagesize);
             extraargs += $"-i {selectedfile} ";
 
-            string format = Prompt.Select("Select Patching mode", new[] { $"Patch {selectedfile}", "Generate Riivolution files" });
-            string outputformat = "wbfs";
-            string outputfile = "";
+            patchmode = Prompt.Select("Select Patching mode", new[] { $"Patch {selectedfile}", "Generate Riivolution files" });
+            outputformat = "wbfs";
+            outputfile = "";
 
-            if (format == "Generate Riivolution files")
+            if (patchmode == "Generate Riivolution files")
             {
                 extraargs += "-r ";
             }
@@ -80,26 +156,7 @@ namespace Wrapper
                 extraargs += $"-o {outputfile}";
             }
 
-            
-
-            if (format == "Generate Riivolution files")
-                Console.WriteLine($@"
-Selected File  : {selectedfile}
-Patching Mode  : {format}
-");
-            else
-                Console.WriteLine($@"
-Selected File  : {selectedfile}
-Patching Mode  : {format}
-Output Format  : {outputformat}
-Output Filename: {outputfile}
-");
-            bool answer = Prompt.Confirm("Are you ready?", defaultValue: true);
-            if (answer)
-                System("\"bin\\tools\\Fynns ISO Patcher\"", extraargs);
-            else
-                Console.WriteLine("Goodbye!");
-                Environment.Exit(0);
+            EndQuestion(false);
         }
     }
 }
