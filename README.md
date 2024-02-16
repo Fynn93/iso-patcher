@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> **This program is not supported anymore, because I have better projects to work on.**
+
 # Fynns ISO Patcher
 An ISO Patcher & Riivolution Generator for Mario Kart Wii Custom Track Distributions that use LE-CODE
 
